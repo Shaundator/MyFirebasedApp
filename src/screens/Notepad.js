@@ -5,6 +5,21 @@ import React, { useState } from 'react'
 import { collection, addDoc, query, onSnapshot } from 'firebase/firestore'
 import { database } from '../../config/firebase';
 
+
+import { getAuth, signInAnonymously } from "firebase/auth";
+
+// Auth, make a method?
+const auth = getAuth();
+signInAnonymously(auth)
+  .then(() => {
+    // Signed in..
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ...
+});
+
 export default function Notepad({ route }){
     const navigation = useNavigation();
     const { name, value } = route.params
@@ -18,7 +33,7 @@ export default function Notepad({ route }){
     const button_2 = () => {
         const noteCollection = "notes"
         console.log('saving note:(' + name + ',' + text + ')')
-        const test = {name: name, value: value}
+        const test = {name: name, value: text}
         addDoc(collection(database, noteCollection), test)
     }
 

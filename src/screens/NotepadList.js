@@ -1,8 +1,12 @@
 import { Text, View, TextInput, SafeAreaView, ScrollView, Button, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { onSnapshot, query, addDoc, collection } from 'firebase/firestore';
+import { database, storage } from '../../config/firebase'
 
-const notepads = [
+const noteCollection = "notes" // Name of the collection of notes
+
+const notepads = [ // TODO: Turn this one into collection found on storage
   {name: "notepad1", value: "notepadtext1"},
   {name: "notepad2", value: "notepadtext2"},
   {name: "notepad3", value: "notepadtext3"},
@@ -10,19 +14,18 @@ const notepads = [
   {name: "notepad5", value: "notepadtext5"}
 ]
 
+
 export default function NotepadList() {
   const navigation = useNavigation();
   const [newNoteName, setNewNoteName] = useState("");
 
   const button_2 = (notepad) => {
-    console.log('clicked note')
-    console.log('note name: ' + notepad.name)
-    console.log('note value: ' + notepad.value)
-    navigation.navigate("Notepad", { name: notepad.name, value: notepad.value} )
+    // TODO: Eventually have a key to update notes on here
+    navigation.navigate("Notepad", { name: notepad.name, value: notepad.value} ) 
   }
 
   const button_3 = () => {
-    console.log('creating new note: ' + newNoteName)
+    // TODO: Verify that there are no duplicates
     navigation.navigate("Notepad")
   };
 
