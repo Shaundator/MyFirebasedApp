@@ -14,10 +14,15 @@ const notepads = [ // TODO: Turn this one into collection found on storage
   {name: "notepad5", value: "notepadtext5"}
 ]
 
+function retrieveObjects(){
+  console.log('retrieving')
+  return notepads
+}
 
 export default function NotepadList() {
   const navigation = useNavigation();
   const [newNoteName, setNewNoteName] = useState("");
+  const [notepads, setNotepads] = useState([]);
 
   const button_2 = (notepad) => {
     // TODO: Eventually have a key to update notes on here
@@ -28,6 +33,10 @@ export default function NotepadList() {
     // TODO: Verify that there are no duplicates
     navigation.navigate("Notepad")
   };
+
+  useEffect(() => {
+    setNotepads(retrieveObjects())
+  }, [])
 
   return (
     <SafeAreaView>
