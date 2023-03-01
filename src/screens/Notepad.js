@@ -2,41 +2,24 @@ import { Text, View, TextInput, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 
-import { collection, addDoc, query, onSnapshot } from 'firebase/firestore'
-import { database } from '../../config/firebase';
-
-
-import { getAuth, signInAnonymously } from "firebase/auth";
-
-// Auth, make a method?
-const auth = getAuth();
-signInAnonymously(auth)
-  .then(() => {
-    // Signed in..
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ...
-});
+import SaveNote from '../utilities/SaveNote';
 
 export default function Notepad({ route }){
     const navigation = useNavigation();
     const { name, value } = route.params
-    
     const [text, setText] = useState(value)
 
     const button_1 = () => {
-        console.log('deleting note')
+        console.log('saving note...')
+        SaveNote(test)
         navigation.navigate("Notepad List")
     }
-    const button_2 = () => {
-        const noteCollection = "notes"
-        console.log('saving note:(' + name + ',' + text + ')')
-        const test = {name: name, value: text}
-        addDoc(collection(database, noteCollection), test)
-    }
 
+    const button_2 = () => {
+        console.log('deleting note...')
+        navigation.navigate("Notepad List")
+    }
+    
     return (
         <View>
             <View>
@@ -49,11 +32,11 @@ export default function Notepad({ route }){
             <View>
                 <Button
                 title='Save Button'
-                onPress={button_2}
+                onPress={button_1}
                 />
                 <Button
                 title='Delete Button'
-                onPress={button_1}
+                onPress={button_2}
                 />
             </View>
         </View>

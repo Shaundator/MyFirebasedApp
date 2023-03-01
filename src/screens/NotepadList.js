@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { onSnapshot, query, addDoc, collection } from 'firebase/firestore';
 import { database, storage } from '../../config/firebase'
 
-const noteCollection = "notes" // Name of the collection of notes
+const noteCollection = "test" // Name of the collection of notes
 
 const notepads = [ // TODO: Turn this one into collection found on storage
   {name: "notepad1", value: "notepadtext1"},
@@ -14,55 +14,51 @@ const notepads = [ // TODO: Turn this one into collection found on storage
   {name: "notepad5", value: "notepadtext5"}
 ]
 
-function retrieveObjects(){
-  console.log('retrieving')
-  return notepads
+const readDB = async() => {
+  const collectionRef = collection(database, noteCollection)
+  const q = query(collectionRef, ref => ref.orderBy('createdAt', 'desc'));
+  onSnapshot(q, snapshot => {
+    const _notes = [];
+    snapshot.forEach(doc => {
+      _notes.push({
+        ...doc.data(),
+        key: doc.id
+      })
+    })
+    _notes.forEach((test) => {
+      console.log('\nobject found:')
+      console.log('key:' + test.key)
+      console.log('name: ' + test.name)
+      console.log('value: ' + test.value)
+    })
+    console.log('returning notes')
+    return _notes
+  })
 }
+
 
 export default function NotepadList() {
   const navigation = useNavigation();
-  const [newNoteName, setNewNoteName] = useState("");
-  const [notepads, setNotepads] = useState([]);
+  const [notepads2, setNotepads] = useState([]);
 
-  const button_2 = (notepad) => {
-    // TODO: Eventually have a key to update notes on here
-    navigation.navigate("Notepad", { name: notepad.name, value: notepad.value} ) 
-  }
 
-  const button_3 = () => {
-    // TODO: Verify that there are no duplicates
-    navigation.navigate("Notepad")
-  };
-
-  useEffect(() => {
-    setNotepads(retrieveObjects())
-  }, [])
-
+  console.log('returning page')
   return (
     <SafeAreaView>
       <Text>Notepad List</Text>
       <ScrollView>
         {notepads.map((notepad) => (
           <View>
-            <TouchableOpacity
-            onPress={() => button_2(notepad)}>
               <Text>{notepad.name}</Text>
-            </TouchableOpacity>
           </View>
         ))}
-
       </ScrollView>
-      <View>
-        <Text>Create New Note</Text>
-      </View>
-      <TextInput
-      onChangeText={setNewNoteName}>
-        <Text>New Note</Text>
-      </TextInput>
-      <Button
-      title='create new note'
-      onPress={button_3}
-      />
     </SafeAreaView>
   );
 }
+
+
+/*
+NOTES;
+
+*/
